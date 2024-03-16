@@ -62,7 +62,7 @@ Don't stop with your first model. Iterate! Try to improve your model by testing 
 
 You should create a model on the training data provided, and test it on your proper test data obtained after splitting the dataset. Your `train.py` script is all yours so configure it how you see fit. You can experiment first in a notebook before you start scripting.
 
-You should also create a `predict.py` script that uses the save model created by your `train.py`, load it, and use it to predict the price of a new house. 
+You should also create a `predict.py` script that uses the save model created by your `train.py`, load it, and use it to predict the price of a new house.
 
 ## Quality Assurance
 
