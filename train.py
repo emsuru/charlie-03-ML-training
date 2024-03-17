@@ -50,11 +50,30 @@ X_test_encoded = pd.DataFrame(X_test_encoded.toarray(), columns=encoder.get_feat
 X_train = pd.concat([X_train.drop(cat_cols, axis=1), X_train_encoded], axis=1)
 X_test = pd.concat([X_test.drop(cat_cols, axis=1), X_test_encoded], axis=1)
 
+# 6. Preprocessing 3: Imputing again after encoding
+
+# After encoding categorical data and before training the model, reapply imputation to the entire DataFrame
+
+# Combine numerical and encoded categorical data
+X_train_prepared = pd.concat([X_train[num_cols], X_train_encoded], axis=1)
+X_test_prepared = pd.concat([X_test[num_cols], X_test_encoded], axis=1)
+
+# Initialize a new imputer that will be applied to the entire DataFrame
+# This is to ensure that no NaN values are introduced during the encoding process or were missed previously
+full_imputer = SimpleImputer(strategy='median')  # You can choose a strategy that fits your data
+
+# Apply imputation to the entire DataFrame
+X_train_prepared = pd.DataFrame(full_imputer.fit_transform(X_train_prepared), columns=X_train_prepared.columns)
+X_test_prepared = pd.DataFrame(full_imputer.transform(X_test_prepared), columns=X_test_prepared.columns)
+
+# Now, X_train_prepared and X_test_prepared are fully imputed
+# and can be used for training and testing
+
 # 6. Train the linear regression model using the preprocessed data
 
 # Initialize and train the linear regression model
 trained_model = LinearRegression()
-trained_model.fit(X_train, y_train)
+trained_model.fit(X_train_prepared, y_train)
 
 # Save the trained model
 joblib.dump(trained_model, 'model.joblib')
