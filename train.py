@@ -7,88 +7,125 @@ from sklearn.linear_model import LinearRegression
 import pandas as pd
 import joblib
 
-# 1. Load data
+# 1. Hello, data!
 df = pd.read_csv('data/properties.csv')
 
-# 2. Split the data set into features ("X") and target ("y")
+# How big are ya?
+print("Number of observations:", df.shape[0])
+print("Number of features:", df.shape[1])
+
+# 2. Let's clean you up before splitting into X and y
+
+# Drop duplicate rows
+df.drop_duplicates(inplace=True)
+print("Dropped duplicates")
+
+# Drop rows with missing target
+df.dropna(axis=0, subset=['price'], inplace=True)
+print("Dropped rows with missing target")
+
+# Drop columns with **high** percentage of missing values (highly subjective: here >50)
+missing_values_count = df.isnull().sum()
+percent_missing = (missing_values_count / df.shape[0]) * 100
+columns_to_drop = percent_missing[percent_missing > 50].index
+print(f"Dropped columns: {list(columns_to_drop)}")
+
+# Drop columns that are **unequivocally** not useful (ie: "ID")
+df.drop(columns="id", inplace=True)
+print("Dropped columns: id")
+
+# 3. Let's split you up into features ("X") and target ("y")
 X = df.drop('price', axis=1)
 y = df['price']
+print("X shape:", X.shape)
+print("y shape:", y.shape)
 
-# 3. Define the numerical_cols and categorical_cols variables from X
+# 4. Let's split your features ("X") into numerical & categorical
 num_cols = X.select_dtypes(include=['int64', 'float64']).columns
 cat_cols = X.select_dtypes(include=['object', 'category']).columns
+print("Numerical features:", num_cols)
+print("Categorical features:", cat_cols)
 
-# 4. Split the data into training and testing sets
+# 5. Let's split both "X" and "y" into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 4. Preprocessing 1: Imputing missing values
+# 6. Let's start preprocessing: ENCODING categorical features into numerical
 
-num_imputer = SimpleImputer(strategy='median')
-cat_imputer = SimpleImputer(strategy='most_frequent')
+# What are we working with?
+for col in cat_cols:
+    print(f"{col}: {df[col].unique()}")
 
-X_train[num_cols] = num_imputer.fit_transform(X_train[num_cols])
-X_train[cat_cols] = cat_imputer.fit_transform(X_train[cat_cols])
+# 6.1 Encoding ordinal features (the ones with inherent hierarchy)
 
-X_test[num_cols] = num_imputer.transform(X_test[num_cols])
-X_test[cat_cols] = cat_imputer.transform(X_test[cat_cols])
+# Map the 'epc' column to numbers
+epc_mapping = {
+    'MISSING': 0,
+    'G': 1,
+    'F': 2,
+    'E': 3,
+    'D': 4,
+    'C': 5,
+    'B': 6,
+    'A': 7,
+    'A+': 8,
+    'A++': 9
+}
+X['epc'] = X['epc'].map(epc_mapping) # so this **replaces** 'epc'with the numerical column
+# Verify the 'epc' column transformation
+print(X['epc'].head())
 
-# 5. Preprocessing 2: Encoding categorical data
+# binning 'state_building' into 3 categories
+X['state_building_grouped'] = X['state_building'].replace({
+    'AS_NEW': 'LIKE_NEW',
+    'JUST_RENOVATED': 'LIKE_NEW',
+    'TO_RESTORE': 'NEEDS_WORK',
+    'TO_BE_DONE_UP': 'NEEDS_WORK',
+    'TO_RENOVATE': 'NEEDS_WORK'
+})
 
-# OneHotEncoder for categorical data
-encoder = OneHotEncoder(handle_unknown='ignore')
+# mapping the categories to numbers
+state_mapping = {
+    'MISSING': 0,
+    'NEEDS_WORK': 1,
+    'GOOD': 2,
+    'LIKE_NEW': 3
+}
 
-# Fit and transform the training data, and transform the testing data
-X_train_encoded = encoder.fit_transform(X_train[cat_cols])
-X_test_encoded = encoder.transform(X_test[cat_cols])
+# applying the mapping to the new column
+X['state_building_encoded'] = X['state_building_grouped'].map(state_mapping)
 
-# Convert encoded data back to DataFrame
-# Convert encoded data back to DataFrame
-X_train_encoded = pd.DataFrame(X_train_encoded.toarray(), columns=encoder.get_feature_names_out(cat_cols))
-X_test_encoded = pd.DataFrame(X_test_encoded.toarray(), columns=encoder.get_feature_names_out(cat_cols))
+# Check the transformation
+print(X[['state_building_grouped', 'state_building_encoded']].head())
 
-# Concatenate encoded categorical data with the rest of the data
-X_train = pd.concat([X_train.drop(cat_cols, axis=1), X_train_encoded], axis=1)
-X_test = pd.concat([X_test.drop(cat_cols, axis=1), X_test_encoded], axis=1)
+# drop the original 'state_building' column and the temp grouping column
+X.drop(['state_building', 'state_building_grouped'], axis=1, inplace=True)
 
-# 6. Preprocessing 3: Imputing again after encoding
+# dataset should now only containthe encoded numerical column for 'state_building'
+print(X.head())
 
-# After encoding categorical data and before training the model, reapply imputation to the entire DataFrame
+# 6.2 Encoding nominal features (the ones without inherent hierarchy)
 
-# Combine numerical and encoded categorical data
-X_train_prepared = pd.concat([X_train[num_cols], X_train_encoded], axis=1)
-X_test_prepared = pd.concat([X_test[num_cols], X_test_encoded], axis=1)
 
-# Initialize a new imputer that will be applied to the entire DataFrame
-# This is to ensure that no NaN values are introduced during the encoding process or were missed previously
-full_imputer = SimpleImputer(strategy='median')  # You can choose a strategy that fits your data
+# Train the linear regression model using the preprocessed data
 
-# Apply imputation to the entire DataFrame
-X_train_prepared = pd.DataFrame(full_imputer.fit_transform(X_train_prepared), columns=X_train_prepared.columns)
-X_test_prepared = pd.DataFrame(full_imputer.transform(X_test_prepared), columns=X_test_prepared.columns)
+# # Initialize and train the linear regression model
+# trained_model = LinearRegression()
+# trained_model.fit(X_train_prepared, y_train)
 
-# Now, X_train_prepared and X_test_prepared are fully imputed
-# and can be used for training and testing
+# # Save the trained model
+# joblib.dump(trained_model, 'model.joblib')
 
-# 6. Train the linear regression model using the preprocessed data
+# # 7. Testing the model
+# from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# Initialize and train the linear regression model
-trained_model = LinearRegression()
-trained_model.fit(X_train_prepared, y_train)
+# # Predict on the testing set
+# y_pred = trained_model.predict(X_test)
 
-# Save the trained model
-joblib.dump(trained_model, 'model.joblib')
+# # Calculate and print the metrics
+# mae = mean_absolute_error(y_test, y_pred)
+# mse = mean_squared_error(y_test, y_pred)
+# r2 = r2_score(y_test, y_pred)
 
-# 7. Testing the model
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-
-# Predict on the testing set
-y_pred = trained_model.predict(X_test)
-
-# Calculate and print the metrics
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-
-print(f"Mean Absolute Error (MAE): {mae}")
-print(f"Mean Squared Error (MSE): {mse}")
-print(f"R-squared (R²): {r2}")
+# print(f"Mean Absolute Error (MAE): {mae}")
+# print(f"Mean Squared Error (MSE): {mse}")
+# print(f"R-squared (R²): {r2}")
