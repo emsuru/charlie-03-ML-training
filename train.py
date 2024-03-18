@@ -43,16 +43,20 @@ print("y shape:", y.shape)
 # 4. Let's split your features ("X") into numerical & categorical
 num_cols = X.select_dtypes(include=['int64', 'float64']).columns
 cat_cols = X.select_dtypes(include=['object', 'category']).columns
-print("Numerical features:", num_cols)
-print("Categorical features:", cat_cols)
+print("Numerical features main X dataset:", num_cols)
+print("Categorical features main X dataset:", cat_cols)
 
 # 5. Let's split both "X" and "y" into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# 6. Let's start preprocessing: ENCODING categorical features into numerical
+# 6. Let's start preprocessing on the training set: ENCODING categorical features into numerical
+
+# Define numerical and categorical variables in training set only
+num_cols_train = X_train.select_dtypes(include=['int64', 'float64']).columns
+cat_cols_train = X_train.select_dtypes(include=['object', 'category']).columns
 
 # What are we working with?
-for col in cat_cols:
+for col in cat_cols_train:
     print(f"{col}: {df[col].unique()}")
 
 # 6.1 Encoding ordinal features (the ones with inherent hierarchy)
@@ -70,12 +74,12 @@ epc_mapping = {
     'A+': 8,
     'A++': 9
 }
-X['epc'] = X['epc'].map(epc_mapping) # so this **replaces** 'epc'with the numerical column
+X_train['epc'] = X_train['epc'].map(epc_mapping) # so this **replaces** 'epc'with the numerical column
 # Verify the 'epc' column transformation
-print(X['epc'].head())
+#print(X['epc'].head())
 
 # binning 'state_building' into 3 categories
-X['state_building_grouped'] = X['state_building'].replace({
+X_train['state_building_grouped'] = X_train['state_building'].replace({
     'AS_NEW': 'LIKE_NEW',
     'JUST_RENOVATED': 'LIKE_NEW',
     'TO_RESTORE': 'NEEDS_WORK',
@@ -92,18 +96,37 @@ state_mapping = {
 }
 
 # applying the mapping to the new column
-X['state_building_encoded'] = X['state_building_grouped'].map(state_mapping)
+X_train['state_building_encoded'] = X_train['state_building_grouped'].map(state_mapping)
 
 # Check the transformation
-print(X[['state_building_grouped', 'state_building_encoded']].head())
+print(X_train[['state_building_grouped', 'state_building_encoded']].head())
 
 # drop the original 'state_building' column and the temp grouping column
-X.drop(['state_building', 'state_building_grouped'], axis=1, inplace=True)
+X_train.drop(['state_building', 'state_building_grouped'], axis=1, inplace=True)
 
 # dataset should now only containthe encoded numerical column for 'state_building'
-print(X.head())
+#print(X_train.head())
 
-# 6.2 Encoding nominal features (the ones without inherent hierarchy)
+# Re-define num & cat variables, after dropping
+num_cols_train = X_train.select_dtypes(include=['int64', 'float64']).columns
+cat_cols_train = X_train.select_dtypes(include=['object', 'category']).columns
+
+# 6.2 Encoding nominal features in bulk (the ones without inherent hierarchy)
+# Print before encoding
+print("Before encoding:\n", X_train.head())
+print("Number of columns before encoding:", X_train.shape[1])
+
+# Apply encoding directly on X
+X_train = pd.get_dummies(X_train, columns=cat_cols_train, drop_first=True)
+
+# Print after encoding
+print("\nAfter encoding:", X_train.head())
+print("Number of columns after encoding:", X_train.shape[1])
+
+# 7. More preprocessing on the training set: IMPUTING missing values
+
+
+
 
 
 # Train the linear regression model using the preprocessed data
