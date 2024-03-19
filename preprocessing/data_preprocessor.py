@@ -1,5 +1,7 @@
 import pandas as pd
+from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
+
 
 
 class DataPreprocessor:
@@ -10,7 +12,7 @@ class DataPreprocessor:
         self.df.drop_duplicates(inplace=True) # DROP duplicate rows
         print("Dropped duplicates")
 
-        self.dropna(axis=0, subset=['price'], inplace=True)   # DROP rows with missing target
+        self.df.dropna(axis=0, subset=['price'], inplace=True)   # DROP rows with missing target
         print("Dropped rows with missing target")
 
         # DROP columns with **high** percentage of missing values (highly subjective: here >50)
@@ -93,3 +95,40 @@ class DataPreprocessor:
         print("y shape:", y.shape)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
         return X_train, X_test, y_train, y_test
+
+
+    def preprocess_encode(self, X_train, X_test):
+        cat_cols_train = X_train.select_dtypes(include=['object', 'category']).columns
+        print("Before encoding:\n", X_train.head())
+        print("Number of columns before encoding:", X_train.shape[1])
+        X_train_encoded = pd.get_dummies(X_train, columns=cat_cols_train, drop_first=True)
+        X_test_encoded = pd.get_dummies(X_test, columns=cat_cols_train, drop_first=True)
+        X_train_aligned, X_test_aligned = X_train_encoded.align(X_test_encoded, join='left', axis=1, fill_value=0)
+        print("\nAfter encoding and aligning X_train:", X_train_aligned.head())
+        print("Number of columns in X_train after encoding and aligning:", X_train_aligned.shape[1])
+        print("\nAfter encoding and aligning X_test:", X_test_aligned.head())
+        print("Number of columns in X_test after encoding and aligning:", X_test_aligned.shape[1])
+        return X_train_aligned, X_test_aligned
+
+
+    def preprocess_feat_select(self, X_train_aligned, X_test_aligned, y_train, threshold=0.14):
+        numeric_cols_train = X_train_aligned.select_dtypes(include=['number'])
+        correlation_matrix_train = numeric_cols_train.join(y_train).corr()
+        correlations_with_target_train = correlation_matrix_train['price'].abs().sort_values(ascending=False)
+        columns_to_drop_due_to_low_correlation = correlations_with_target_train[correlations_with_target_train < threshold].index.tolist()
+
+        # Drop the same columns from both X_train_aligned and X_test_aligned
+        X_train_aligned = X_train_aligned.drop(columns=columns_to_drop_due_to_low_correlation)
+        X_test_aligned = X_test_aligned.drop(columns=columns_to_drop_due_to_low_correlation)
+
+        print(f"Dropped columns due to low correlation with target: {columns_to_drop_due_to_low_correlation}")
+        return X_train_aligned, X_test_aligned
+
+    def preprocess_impute(self, X_train_aligned, X_test_aligned, strategy='median'):
+        numeric_cols_train = X_train_aligned.select_dtypes(include=['int64', 'float64']).columns
+        num_imputer = SimpleImputer(strategy=strategy)
+        X_train_aligned[numeric_cols_train] = num_imputer.fit_transform(X_train_aligned[numeric_cols_train])
+        X_test_aligned[numeric_cols_train] = num_imputer.transform(X_test_aligned[numeric_cols_train])
+        print("Missing values in numerical columns of training set after imputation:\n", X_train_aligned[numeric_cols_train].isnull().sum())
+        print("Missing values in numerical columns of test set after imputation:\n", X_test_aligned[numeric_cols_train].isnull().sum())
+        return X_train_aligned, X_test_aligned

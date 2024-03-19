@@ -1,12 +1,14 @@
-# Real Estate Price Predictor
+# Immo Charlie Phase 03: Price Predictor
 
 [![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
 ## 📖 Description
 
-A linear regression ML model to predict residential property prices in Belgium.
+This Price Predictor is designed to predict residential property prices based on their features.
 
-Takes a dataset of properties and their features as input and outputs a model that can predict the price of a property given its features.
+Takes a dataset of properties and their features as input, runs an ML algorithm on the data and outputs its predictions.
+
+Current project stage: training and evaluating various ML models on the dataset. Will update soon to leave only the best performing model and clean the repo, before moving on to the 4th and last phase of the project.
 
 
 ## 🧬 Project structure
@@ -16,27 +18,49 @@ Takes a dataset of properties and their features as input and outputs a model th
 charlie-03-ML/
 │
 ├── data/
-│   └── properties.csv
+│   └── properties.csv                # training dataset
+│   └── new_dataset_*.csv             # new data to predict on
 │
-├── models/
-│   ├── __init__.py
-│   └── linear_regression_model.py
-│
-├── preprocessing/
+├── preprocessing/                    # data preprocessing code
 │   ├── __init__.py
 │   └── data_preprocessor.py
 │
-├── training/
+├── training/                         # base training code
 │   ├── __init__.py
 │   └── model_trainer.py
 │
-├── saved_models/
+├── models/                           # running base training code with various ML algorithms
+│   ├── __init__.py
+│   └── train_catboost.py
+│   └── train_gradient_boosting.py
+│   └── train_linear_regression.py
+│   └── train_random_forest.py
+│   └── train_xgboost.py
+│   └── train_*.py (other models)
 │
-└── main.py
+├── saved_models/                     # saved models in .pkl format
+│   └── model_*.pkl
+│
+├── predict.py                        # script for making predictions on new data
+└── .gitignore
+└── requirements.txt
+└── MODELCARD.md
+└── README.md
 ```
-## 📂 Project background
 
-This project is phase 3 out of a 4-phase ML project I did as part of my [AI Bootcamp training by BeCode](https://www.udemy.com/course/the-data-science-course-complete-data-science-bootcamp/).
+## 🛠️ Features
+
+.. to be filled in soon ..
+
+
+## 👩‍💻 Usage
+
+.. to be filled in soon ..
+
+
+## 📂 Project background & timeline
+
+.. to be filled in soon ..
 
 
 ## ⚠️ Warning

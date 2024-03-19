@@ -1,6 +1,9 @@
+#ignore the CatBoost info folder
+catboost_info/
 # ignore the don't push folder
 dont_push/
 
+saved_models/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

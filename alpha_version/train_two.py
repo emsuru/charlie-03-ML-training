@@ -30,7 +30,7 @@ def clean_drop(df):
     df.drop(columns=columns_to_drop, inplace=True)
     print(f"Dropped columns: {list(columns_to_drop)}")
 
-    # DROP columns that are **unequivocally** not useful (ie: "ID")
+    # DROP columns that are **unequivocally** not useful (here I choose only: "id")
     df.drop(columns="id", inplace=True)
     print("Dropped columns: id")
     return df

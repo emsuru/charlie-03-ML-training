@@ -1,10 +1,7 @@
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.linear_model import LinearRegression
 import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 import joblib
 
 # 1. Hello, data!
@@ -231,7 +228,7 @@ print(f"R-squared: {test_r2}")
 # ---- SAVE MODEL ----
 
 # Save the model to disk
-joblib_file = "linear_regression_model.pkl"
+joblib_file = "saved_models/linear_regression_model.pkl"
 joblib.dump(model, joblib_file)
 
 print(f"Model saved to {joblib_file}")
