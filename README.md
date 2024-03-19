@@ -1,8 +1,19 @@
-# charlie-03-ML-model-development
-A linear regression ML model to predict residential property prices in Belgium
+# Real Estate Price Predictor
+
+[![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
+[![Scikit](https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/scikit-learn-logo.png)
+
+## 📖 Description
+
+A linear regression ML model to predict residential property prices in Belgium.
+
+Takes a dataset of properties and their features as input and outputs a model that can predict the price of a property given its features.
 
 
-# Project structure
+## 🧬 Project structure
+
+```
 
 charlie-03-ML/
 │
@@ -24,3 +35,25 @@ charlie-03-ML/
 ├── saved_models/
 │
 └── main.py
+```
+## 📂 Project background
+
+This project is phase 3 out of a 4-phase ML project I did as part of my [AI Bootcamp training by BeCode](https://www.udemy.com/course/the-data-science-course-complete-data-science-bootcamp/).
+
+
+## ⚠️ Warning
+
+All my code is currently *heavily*:
+
+- docstringed
+- commented
+
+.. and sometimes typed.
+
+This is to help me learn and for my feedback sessions with our coach.
+
+---
+
+Thank you for visiting my project page!
+
+Connect with me on [LinkedIn](https://www.linkedin.com/in/mirunasuru/)
