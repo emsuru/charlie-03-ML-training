@@ -35,7 +35,6 @@ print(f"Dropped columns: {list(columns_to_drop)}")
 df.drop(columns="id", inplace=True)
 print("Dropped columns: id")
 
-
 # IMPUTE missing values for CATEGORICAL COLS with "MISSING".
 # --I've learned this can be done on the whole dataset,
 # --since operation does not involve learning any parameters from the data
@@ -91,17 +90,11 @@ epc_mapping = {
 df['epc'] = df['epc'].map(epc_mapping) #so this **replaces** 'epc'with the numerical column
 print(df[['state_building_encoded', 'epc']].head())
 
-print(f"Number of numerical features: {df.select_dtypes(include=['number']).shape[1]}")
-print(f"Number of categorical features: {df.select_dtypes(include=['object', 'category']).shape[1]}")
-
-
 # 3. Let's split you up into features ("X") and target ("y")
 X = df.drop('price', axis=1)
 y = df['price']
 print("X shape:", X.shape)
 print("y shape:", y.shape)
-
-
 
 # 4. Let's split your features ("X") into numerical & categorical
 num_cols = X.select_dtypes(include=['int64', 'float64']).columns
@@ -124,94 +117,61 @@ cat_cols_train = X_train.select_dtypes(include=['object', 'category']).columns
 print("Before encoding:\n", X_train.head())
 print("Number of columns before encoding:", X_train.shape[1])
 
-# Apply encoding directly on X_train
-X_train_encoded = pd.get_dummies(X_train, columns=cat_cols_train, drop_first=True)
+# Apply encoding directly on X
+X_train = pd.get_dummies(X_train, columns=cat_cols_train, drop_first=True)
 
-# Apply the same encoding to X_test
-X_test_encoded = pd.get_dummies(X_test, columns=cat_cols_train, drop_first=True)
+# Print after encoding
+print("\nAfter encoding:", X_train.head())
+print("Number of columns after encoding:", X_train.shape[1])
 
-# Align X_train_encoded and X_test_encoded to ensure they have the same columns
-X_train_aligned, X_test_aligned = X_train_encoded.align(X_test_encoded, join='left', axis=1, fill_value=0)
-
-# Print after encoding and aligning
-print("\nAfter encoding and aligning X_train:", X_train_aligned.head())
-print("Number of columns in X_train after encoding and aligning:", X_train_aligned.shape[1])
-print("\nAfter encoding and aligning X_test:", X_test_aligned.head())
-print("Number of columns in X_test after encoding and aligning:", X_test_aligned.shape[1])
-
-#FEATURE SELECTION - DROP columns with no correlation to target (subjective)
-
-# Calculate correlation matrix on the numeric columns of the training set
-numeric_cols_train = X_train.select_dtypes(include=['number'])
-correlation_matrix_train = numeric_cols_train.join(y_train).corr()  # Joining y_train to include the target in correlation calculation
-correlations_with_target_train = correlation_matrix_train['price'].abs().sort_values(ascending=False)
-
-# Define a threshold for dropping columns based on correlation with the target variable
-threshold = 0.14  # This is subjective and can be adjusted based on domain knowledge and specific requirements
-
-# Identify columns that have low correlation with the target in the training set
-columns_to_drop_due_to_low_correlation = correlations_with_target_train[correlations_with_target_train < threshold].index.tolist()
-
-# Apply the feature selection to both training and test sets
-X_train = X_train.drop(columns=columns_to_drop_due_to_low_correlation)
-X_test = X_test.drop(columns=columns_to_drop_due_to_low_correlation)
-
-print(f"Dropped columns due to low correlation with target: {columns_to_drop_due_to_low_correlation}")
-
-# Update numeric_cols_train after dropping columns
-numeric_cols_train = X_train.select_dtypes(include=['int64', 'float64']).columns
-
+# REDEFINE VARIABLES after encoding
+num_cols_train = X_train.select_dtypes(include=['int64', 'float64']).columns
+cat_cols_train = X_train.select_dtypes(include=['object', 'category']).columns
 
 
 # # 6.3 IMPUTE NUMERICAL - Impute all numerical features
 
 # # Identify missing values
-# Identify missing values in numerical columns and print the min and max values
-for col in numeric_cols_train:
+missing_values_percent = (X_train[num_cols_train].isnull().sum() / X_train.shape[0]) * 100
+missing_values_percent = missing_values_percent[missing_values_percent > 0].sort_values(ascending=False)
+print("Percentage of missing values per column (descending order):\n", missing_values_percent)
+
+# For each numerical column with missing values, print the min and max values
+for col in num_cols_train:
     if X_train[col].isnull().any():
         print(f"{col}: Min = {X_train[col].min()}, Max = {X_train[col].max()}")
 
-
 # IMPUTING #1: Statistical bulk imputing with median, because fuck it
-# Initialize the imputer
 num_imputer = SimpleImputer(strategy='median')
+X_train[num_cols_train] = num_imputer.fit_transform(X_train[num_cols_train])
 
-# Fit the imputer on the training data and transform it
-X_train[numeric_cols_train] = num_imputer.fit_transform(X_train[numeric_cols_train])
+# Check if any missing values remain
+print("Missing values in numerical columns after imputation:\n", X_train[num_cols_train].isnull().sum())
 
-# Transform the test data using the same imputer
-X_test[numeric_cols_train] = num_imputer.transform(X_test[numeric_cols_train])
+# IMPUTING #2: Arbitrary imputing with custom values
+# values chosen based on the feature's distribution
+arbitrary_values = {
+    'latitude': 999999999,
+    'longitude': 999999999,
+    'construction_year': 999999999,
+    'total_area_sqm': 999999999,
+    'surface_land_sqm': 999999999,
+    'nbr_frontages': 999999999 ,
+    'terrace_sqm': 999999999,
+    'garden_sqm': 999999999,
+    'primary_energy_consumption_sqm': 999999999
+}
+# Impute each feature with its corresponding arbitrary value
+for feature, value in arbitrary_values.items():
+    imputer = SimpleImputer(strategy='constant', fill_value=value)
+    X_train[feature] = imputer.fit_transform(X_train[[feature]])
+# Verify the imputation
+print(X_train.head())
 
-# Check if any missing values remain in the training set
-print("Missing values in numerical columns of training set after imputation:\n", X_train[numeric_cols_train].isnull().sum())
-
-# Optionally, check for missing values in the test set as well
-print("Missing values in numerical columns of test set after imputation:\n", X_test[numeric_cols_train].isnull().sum())
-
-# # IMPUTING #2: Arbitrary imputing with custom values
-# # values chosen based on the feature's distribution
-# arbitrary_values = {
-#     'latitude': 999999999,
-#     'longitude': 999999999,
-#     'construction_year': 999999999,
-#     'total_area_sqm': 999999999,
-#     'surface_land_sqm': 999999999,
-#     'nbr_frontages': 999999999 ,
-#     'terrace_sqm': 999999999,
-#     'garden_sqm': 999999999,
-#     'primary_energy_consumption_sqm': 999999999
-# }
-# # Impute each feature with its corresponding arbitrary value
-# for feature, value in arbitrary_values.items():
-#     imputer = SimpleImputer(strategy='constant', fill_value=value)
-#     X_train[feature] = imputer.fit_transform(X_train[[feature]])
-# # Verify the imputation
-# print(X_train.head())
-
-# # IMPUTING #3  - Some other fancier imputing, KNN or geocoders
+# IMPUTING #3  - Some other fancier imputing, KNN or geocoders
 
 
-# # ---- MODEL TRAINING CODE BELOW ----
+# ---- MODEL TRAINING CODE BELOW ----
 
 # Train the linear regression model using the preprocessed data
 

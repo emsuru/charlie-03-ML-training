@@ -142,7 +142,7 @@ print("Number of columns in X_test after encoding and aligning:", X_test_aligned
 #FEATURE SELECTION - DROP columns with no correlation to target (subjective)
 
 # Calculate correlation matrix on the numeric columns of the training set
-numeric_cols_train = X_train.select_dtypes(include=['number'])
+numeric_cols_train = X_train_aligned.select_dtypes(include=['number'])
 correlation_matrix_train = numeric_cols_train.join(y_train).corr()  # Joining y_train to include the target in correlation calculation
 correlations_with_target_train = correlation_matrix_train['price'].abs().sort_values(ascending=False)
 
@@ -153,13 +153,13 @@ threshold = 0.14  # This is subjective and can be adjusted based on domain knowl
 columns_to_drop_due_to_low_correlation = correlations_with_target_train[correlations_with_target_train < threshold].index.tolist()
 
 # Apply the feature selection to both training and test sets
-X_train = X_train.drop(columns=columns_to_drop_due_to_low_correlation)
-X_test = X_test.drop(columns=columns_to_drop_due_to_low_correlation)
+X_train_aligned = X_train_aligned.drop(columns=columns_to_drop_due_to_low_correlation)
+X_test_aligned = X_test_aligned.drop(columns=columns_to_drop_due_to_low_correlation)
 
 print(f"Dropped columns due to low correlation with target: {columns_to_drop_due_to_low_correlation}")
 
 # Update numeric_cols_train after dropping columns
-numeric_cols_train = X_train.select_dtypes(include=['int64', 'float64']).columns
+numeric_cols_train = X_train_aligned.select_dtypes(include=['int64', 'float64']).columns
 
 
 
@@ -168,8 +168,8 @@ numeric_cols_train = X_train.select_dtypes(include=['int64', 'float64']).columns
 # # Identify missing values
 # Identify missing values in numerical columns and print the min and max values
 for col in numeric_cols_train:
-    if X_train[col].isnull().any():
-        print(f"{col}: Min = {X_train[col].min()}, Max = {X_train[col].max()}")
+    if X_train_aligned[col].isnull().any():
+        print(f"{col}: Min = {X_train_aligned[col].min()}, Max = {X_train_aligned[col].max()}")
 
 
 # IMPUTING #1: Statistical bulk imputing with median, because fuck it
@@ -177,62 +177,53 @@ for col in numeric_cols_train:
 num_imputer = SimpleImputer(strategy='median')
 
 # Fit the imputer on the training data and transform it
-X_train[numeric_cols_train] = num_imputer.fit_transform(X_train[numeric_cols_train])
+X_train_aligned[numeric_cols_train] = num_imputer.fit_transform(X_train_aligned[numeric_cols_train])
 
 # Transform the test data using the same imputer
-X_test[numeric_cols_train] = num_imputer.transform(X_test[numeric_cols_train])
+X_test_aligned[numeric_cols_train] = num_imputer.transform(X_test_aligned[numeric_cols_train])
 
 # Check if any missing values remain in the training set
-print("Missing values in numerical columns of training set after imputation:\n", X_train[numeric_cols_train].isnull().sum())
+print("Missing values in numerical columns of training set after imputation:\n", X_train_aligned[numeric_cols_train].isnull().sum())
 
 # Optionally, check for missing values in the test set as well
-print("Missing values in numerical columns of test set after imputation:\n", X_test[numeric_cols_train].isnull().sum())
-
-# # IMPUTING #2: Arbitrary imputing with custom values
-# # values chosen based on the feature's distribution
-# arbitrary_values = {
-#     'latitude': 999999999,
-#     'longitude': 999999999,
-#     'construction_year': 999999999,
-#     'total_area_sqm': 999999999,
-#     'surface_land_sqm': 999999999,
-#     'nbr_frontages': 999999999 ,
-#     'terrace_sqm': 999999999,
-#     'garden_sqm': 999999999,
-#     'primary_energy_consumption_sqm': 999999999
-# }
-# # Impute each feature with its corresponding arbitrary value
-# for feature, value in arbitrary_values.items():
-#     imputer = SimpleImputer(strategy='constant', fill_value=value)
-#     X_train[feature] = imputer.fit_transform(X_train[[feature]])
-# # Verify the imputation
-# print(X_train.head())
-
-# # IMPUTING #3  - Some other fancier imputing, KNN or geocoders
+print("Missing values in numerical columns of test set after imputation:\n", X_test_aligned[numeric_cols_train].isnull().sum())
 
 
-# # ---- MODEL TRAINING CODE BELOW ----
+# ---- MODEL TRAINING ---
 
-# Train the linear regression model using the preprocessed data
-
-# # Initialize and train the linear regression model
-trained_model = LinearRegression()
-trained_model.fit(X_train, y_train)
-
-# # Save the trained model
-joblib.dump(trained_model, 'model.joblib')
-
-# # 7. Testing the model
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# # Predict on the testing set
-y_pred = trained_model.predict(X_test)
+# 7. Initialize the Linear Regression Model
+model = LinearRegression()
 
-# # Calculate and print the metrics
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
+# 8. Train the Model
+model.fit(X_train_aligned, y_train)
 
-print(f"Mean Absolute Error (MAE): {mae}")
-print(f"Mean Squared Error (MSE): {mse}")
-print(f"R-squared (R²): {r2}")
+# 9. Make Predictions
+y_train_pred = model.predict(X_train_aligned)
+y_test_pred = model.predict(X_test_aligned)
+
+# 10. Evaluate the Model
+# Training set evaluation
+train_mae = mean_absolute_error(y_train, y_train_pred)
+train_mse = mean_squared_error(y_train, y_train_pred)
+train_rmse = mean_squared_error(y_train, y_train_pred, squared=False)
+train_r2 = r2_score(y_train, y_train_pred)
+
+print("Training Set Evaluation:")
+print(f"Mean Absolute Error: {train_mae}")
+print(f"Mean Squared Error: {train_mse}")
+print(f"Root Mean Squared Error: {train_rmse}")  # Display RMSE
+print(f"R-squared: {train_r2}")
+
+# Test set evaluation
+test_mae = mean_absolute_error(y_test, y_test_pred)
+test_mse = mean_squared_error(y_test, y_test_pred)
+test_rmse = mean_squared_error(y_test, y_test_pred, squared=False)
+test_r2 = r2_score(y_test, y_test_pred)
+
+print("\nTest Set Evaluation:")
+print(f"Mean Absolute Error: {test_mae}")
+print(f"Mean Squared Error: {test_mse}")
+print(f"Root Mean Squared Error: {test_rmse}")
+print(f"R-squared: {test_r2}")
