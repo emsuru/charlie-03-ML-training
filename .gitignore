@@ -1,3 +1,6 @@
+# ignore the don't push folder
+dont_push/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

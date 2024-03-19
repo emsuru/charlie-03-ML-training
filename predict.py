@@ -11,10 +11,10 @@
 import pandas as pdimport joblib
 
 # Load the trained model
-model = joblib.load('model.joblib')
+model = joblib.load('linear_regression_model.pkl')
 
 # Load new data and preprocess it
-# new_data_preprocessed = ...
+new_data_preprocessed = ...
 
 # Make predictions
 predictions = model.predict(new_data_preprocessed)

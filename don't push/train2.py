@@ -26,7 +26,7 @@ num_preprocessor = Pipeline(steps=[
 # Define preprocessing for categorical columns (impute then one-hot encode)
 cat_preprocessor = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='most_frequent')),
-    ('encoder', OneHotEncoder(handle_unknown='ignore', sparse=False))])
+    ('encoder', OneHotEncoder(handle_unknown='ignore'))])
 
 #-- STEP 3: Combine Preprocessors with ColumnTransformer
 # Use ColumnTransformer to apply the respective preprocessing steps to the numerical and categorical columns.
@@ -56,3 +56,37 @@ model_pipeline.fit(X_train, y_train)
 import joblib
 
 joblib.dump(model_pipeline, 'model_pipeline.joblib')
+
+### -----
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+
+# 9. Make Predictions
+y_train_pred = model_pipeline.predict(X_train)
+y_test_pred = model_pipeline.predict(X_test)
+
+# 10. Evaluate the Model
+# Training set evaluation
+train_mae = mean_absolute_error(y_train, y_train_pred)
+train_mse = mean_squared_error(y_train, y_train_pred)
+train_rmse = mean_squared_error(y_train, y_train_pred, squared=False)
+train_r2 = r2_score(y_train, y_train_pred)
+
+print("Training Set Evaluation:")
+print(f"Mean Absolute Error: {train_mae}")
+print(f"Mean Squared Error: {train_mse}")
+print(f"Root Mean Squared Error: {train_rmse}")  # Display RMSE
+print(f"R-squared: {train_r2}")
+
+# Test set evaluation
+test_mae = mean_absolute_error(y_test, y_test_pred)
+test_mse = mean_squared_error(y_test, y_test_pred)
+test_rmse = mean_squared_error(y_test, y_test_pred, squared=False)
+test_r2 = r2_score(y_test, y_test_pred)
+
+print("\nTest Set Evaluation:")
+print(f"Mean Absolute Error: {test_mae}")
+print(f"Mean Squared Error: {test_mse}")
+print(f"Root Mean Squared Error: {test_rmse}")
+print(f"R-squared: {test_r2}")

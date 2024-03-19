@@ -227,3 +227,11 @@ print(f"Mean Absolute Error: {test_mae}")
 print(f"Mean Squared Error: {test_mse}")
 print(f"Root Mean Squared Error: {test_rmse}")
 print(f"R-squared: {test_r2}")
+
+# ---- SAVE MODEL ----
+
+# Save the model to disk
+joblib_file = "linear_regression_model.pkl"
+joblib.dump(model, joblib_file)
+
+print(f"Model saved to {joblib_file}")
