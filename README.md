@@ -18,18 +18,18 @@ Current project stage: training and evaluating various ML models on the dataset.
 charlie-03-ML/
 │
 ├── data/
-│   └── properties.csv                # training dataset
-│   └── new_dataset_*.csv             # new data to predict on
+│   └── properties.csv                --- training dataset
+│   └── new_dataset_*.csv             --- new data to predict on
 │
-├── preprocessing/                    # data preprocessing code
+├── preprocessing/                    --- data preprocessing code
 │   ├── __init__.py
 │   └── data_preprocessor.py
 │
-├── training/                         # base training code
+├── training/                         --- base training code
 │   ├── __init__.py
 │   └── model_trainer.py
 │
-├── models/                           # running base training code with various ML algorithms
+├── models/                           --- running base training code with various ML algorithms
 │   ├── __init__.py
 │   └── train_catboost.py
 │   └── train_gradient_boosting.py
@@ -38,15 +38,19 @@ charlie-03-ML/
 │   └── train_xgboost.py
 │   └── train_*.py (other models)
 │
-├── saved_models/                     # saved models in .pkl format
+├── saved_models/                     --- saved models in .pkl format
 │   └── model_*.pkl
 │
-├── predict.py                        # script for making predictions on new data
+├── predict.py                        --- script for making predictions on new data
 └── .gitignore
 └── requirements.txt
 └── MODELCARD.md
 └── README.md
 ```
+
+
+Notes: the saved_models folder with the pickle files is not pushed to this repo yet from local machine (need to handle large file uploads to git), the MODELCARD is not yet started, predict.py is work in progress.
+
 
 ## 🛠️ Features
 
