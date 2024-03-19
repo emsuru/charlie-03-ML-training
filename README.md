@@ -2,8 +2,6 @@
 
 [![forthebadge made-with-python](https://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-[![Scikit](https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/scikit-learn-logo.png)
-
 ## 📖 Description
 
 A linear regression ML model to predict residential property prices in Belgium.
