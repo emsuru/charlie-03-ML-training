@@ -7,6 +7,7 @@ def train_linear_regression():
     df = pd.read_csv('data/properties.csv')
     preprocessor = DataPreprocessor(df)
     preprocessor.clean_drop().clean_impute().clean_encode()
+    preprocessor.save_training_columns('training/training_columns.txt')
     X_train, X_test, y_train, y_test = preprocessor.preprocess_split()
     X_train, X_test = preprocessor.preprocess_encode(X_train, X_test)
     X_train, X_test = preprocessor.preprocess_feat_select(X_train, X_test, y_train)

@@ -2,8 +2,6 @@ import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 
-
-
 class DataPreprocessor:
     def __init__(self, df):
         self.df = df
@@ -87,6 +85,18 @@ class DataPreprocessor:
         print(f"Number of numerical features: {self.df.select_dtypes(include=['number']).shape[1]}")
         print(f"Number of categorical features: {self.df.select_dtypes(include=['object', 'category']).shape[1]}")
         return self
+
+    def save_training_columns(self, filepath='training/training_columns.txt'):
+        """
+        Saves the column names of the processed dataframe to a file, excluding the target variable.
+        """
+        # Exclude the target variable 'price' from the columns
+        training_columns = [col for col in self.df.columns if col != 'price']
+        # Save the column names to a file
+        with open(filepath, 'w') as file:
+            for column in training_columns:
+                file.write(f"{column}\n")
+        print(f"Training columns saved to {filepath}")
 
     def preprocess_split(self, target='price', test_size=0.2, random_state=42):
         X = self.df.drop(target, axis=1)
