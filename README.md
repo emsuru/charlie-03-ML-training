@@ -21,16 +21,17 @@ charlie-03-ML/
 │   └── properties.csv                --- data: training dataset
 │   └── newdata.csv                   --- data: new dataset(s) for predictions
 │
-├── preprocessing/                    --- definition code for data preprocessing class
-│   ├── __init__.py
+├── preprocessing/                    --- definition code for data preprocessing classes
+│   └── __init__.py
 │   └── data_preprocessor.py
+│   └── newdata_preprocessor.py
 │
 ├── training/                         --- definition code for base training class
-│   ├── __init__.py
+│   └── __init__.py
 │   └── model_trainer.py
 │
 ├── models/                           --- execution code: runs training code on several ML algorithms
-│   ├── __init__.py
+│   └── __init__.py
 │   └── train_catboost.py
 │   └── train_gradient_boosting.py
 │   └── train_linear_regression.py
@@ -42,9 +43,9 @@ charlie-03-ML/
 │   └── model_*.pkl
 │
 ├── predict.py                        --- execution code: runs predictions on new dataset(s)
-└── .gitignore
-└── requirements.txt
-└── MODELCARD.md
+├── .gitignore
+├── requirements.txt
+├── MODELCARD.md
 └── README.md
 ```
 
