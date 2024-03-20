@@ -1,6 +1,6 @@
 #
 
-# Model Card for Charlie Price Predictor
+# Model Card: Price Predictor
 
 ## Model Details
 - **Model Type**: Linear Regression, with additional models including CatBoost, XGBoost, Random Forest, etc.
@@ -18,7 +18,7 @@
 
 ## Evaluation
 - **Performance Metrics**: RMSE, MAE, R², per each model trained. Best performing model will be selected for deployment.
-- **Validation Methods**: Description of cross-validation or other validation methods used.
+- **Validation Methods**: To be filled in...
 
 ## Caveats and Recommendations
 - **Model Limitations**: To be filled-in..
