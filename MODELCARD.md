@@ -1,6 +1,6 @@
 #
 
-# Model Card: Price Predictor
+# Model Card: Immo Charlie Price Predictor
 
 ## Model Details
 - **Model Type**: Linear Regression, with additional models including CatBoost, XGBoost, Random Forest, etc.
