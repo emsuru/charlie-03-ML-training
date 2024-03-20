@@ -8,8 +8,6 @@ This Price Predictor is built to predict residential property prices.
 
 It takes a dataset of properties and their features as input, runs it through an ML pipeline, and outputs its predictions.
 
-Current project stage: training and evaluating various ML models. Will update soon to leave only the best performing model and clean the repo, before moving on to the 4th and last phase of the project.
-
 
 ## 🧬 Project structure
 
@@ -50,11 +48,14 @@ charlie-03-ML/
 ```
 
 
-## Status:
+# Project Status:
+
+Currently training and evaluating various ML models. Will update soon to leave only the best performing model and clean the repo, before moving on to the 4th and last phase of the project.
 
 - the saved_models folder with the pickle files is not pushed to this repo yet from local machine (need to handle large file uploads to git)
 - the MODELCARD is work-in-progress
 - predict.py is work-in-progress
+
 
 
 ## 🛠️ Features
