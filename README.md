@@ -27,6 +27,7 @@ charlie-03-ML/
 ├── training/                         --- definition code for base training class
 │   └── __init__.py
 │   └── model_trainer.py
+│   └── training_columns.txt
 │
 ├── models/                           --- execution code: runs training code on several ML algorithms
 │   └── __init__.py
@@ -48,7 +49,7 @@ charlie-03-ML/
 ```
 
 
-# Project Status:
+## Project Status:
 
 Currently training and evaluating various ML models. Will update soon to leave only the best performing model and clean the repo, before moving on to the 4th and last phase of the project.
 
