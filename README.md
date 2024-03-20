@@ -19,7 +19,7 @@ charlie-03-ML/
 │
 ├── data/
 │   └── properties.csv                --- data: training dataset
-│   └── new_dataset_*.csv             --- data: new dataset(s) for predictions
+│   └── newdata.csv                   --- data: new dataset(s) for predictions
 │
 ├── preprocessing/                    --- definition code for data preprocessing class
 │   ├── __init__.py
