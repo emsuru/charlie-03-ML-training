@@ -60,17 +60,17 @@ Currently training and evaluating various ML models. Will update soon to leave o
 
 ## 🛠️ Features
 
-- **Multiple Model Training**: Supports training with various machine learning algorithms including Linear Regression, CatBoost, XGBoost, Random Forest, and more, allowing for easy experimentation and model comparison.
-- **Data Preprocessing**: Includes a comprehensive data preprocessing pipeline (`preprocessing/data_preprocessor.py`) that cleans, imputes, and encodes the dataset, preparing it for training and prediction.
-- **Predictions on New Data**: Utilizes a separate `predict.py` script to load trained models and make predictions on new datasets, making the project ready for real-world application.
-- **Modular Design**: The project is structured for clarity, separating data, models, training, and prediction scripts for easy navigation and development.
+- supports training with various machine learning algorithmss, for easy experimentation & model comparison
+- data preprocessing pipeline (`preprocessing/data_preprocessor.py`) that cleans, imputes, and encodes to rpepare for training
+- new data validation & preprocessing, to prepare new data sets for prediction (`preprocessing/newdata_preprocessor.py`)
+- separate `predict.py` script to load trained models, make predictions on new datasets and save predictions in output .csv file
+- modular design 
 
 ### 🚀 Upcoming Features
 
-- **Hyperparameter Tuning**: Implementation of a systematic approach to fine-tune the hyperparameters of various models to improve performance.
-- **Automated New Data Validation & Preprocessing**: Introducing automated checks to validate new datasets against the model's expected input schema.
-- **API Deployment**: Creating a RESTful API for the model, allowing for easy integration into web services and applications for real-time predictions. (this will be stage 4 out of a total of 4 for this project)
-- **...**
+- **hyperparameter tuning**: improving the performance of the baseline models 
+- **automated new data validation**: futher automating newdata validation checks against the model's expected input schema.
+- **API deployment**: this will the final development stage for this four-stage learning project 
 
 
 ## 👩‍💻 Usage
