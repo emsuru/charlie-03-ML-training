@@ -84,11 +84,12 @@ To use this project for training a model or making predictions, follow these ste
 2. Choose the model training script from the `models/` directory (e.g., `train_linear_regression.py`).
 3. Run the script to train the model. This will also save the trained model in the `saved_models/` directory.
 
+Please note: do _**not**_ include ".py" in the file name when executing.
 Example:
 
 ```
 
-python3 models/train_xgboost (# note: do not include .py when running)
+python -m models/train_xgboost 
 
 ```
 
@@ -103,7 +104,7 @@ python3 models/train_xgboost (# note: do not include .py when running)
 
 ```
 
-python3 predict.py
+python predict.py
 
 ```
 
