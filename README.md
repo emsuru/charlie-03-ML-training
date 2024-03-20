@@ -4,9 +4,7 @@
 
 ## 📖 Description
 
-This Price Predictor is built to predict residential property prices.
-
-It takes a dataset of properties and their features as input, runs it through an ML pipeline, and outputs its predictions.
+This Price Predictor is built to predict residential property prices. It is phase 3 out of a larger project. See phase 1 (data collection) [here](https://github.com/emsuru/charlie-01-data-collection) and phase 2 (data analysis) [here](https://github.com/emsuru/charlie-02-data-analysis). The Predictor takes a dataset of properties and their features as input, runs it through an ML pipeline, and outputs its predictions.
 
 
 ## 🧬 Project structure
