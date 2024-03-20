@@ -49,36 +49,26 @@ charlie-03-ML/
 ```
 
 
-Notes: the saved_models folder with the pickle files is not pushed to this repo yet from local machine (need to handle large file uploads to git), the MODELCARD is not yet started, predict.py is work in progress.
+## Status:
 
+- the saved_models folder with the pickle files is not pushed to this repo yet from local machine (need to handle large file uploads to git)
+- the MODELCARD is work-in-progress
+- predict.py is work-in-progress
 
-## 🛠️ Features
 
 ## 🛠️ Features
 
 - **Multiple Model Training**: Supports training with various machine learning algorithms including Linear Regression, CatBoost, XGBoost, Random Forest, and more, allowing for easy experimentation and model comparison.
 - **Data Preprocessing**: Includes a comprehensive data preprocessing pipeline (`preprocessing/data_preprocessor.py`) that cleans, imputes, and encodes the dataset, preparing it for training and prediction.
-- **Model Evaluation**: After training, models are evaluated using standard metrics to ensure effectiveness before deployment.
 - **Predictions on New Data**: Utilizes a separate `predict.py` script to load trained models and make predictions on new datasets, making the project ready for real-world application.
 - **Modular Design**: The project is structured for clarity, separating data, models, training, and prediction scripts for easy navigation and development.
 
 ### 🚀 Upcoming Features
 
 - **Hyperparameter Tuning**: Implementation of a systematic approach to fine-tune the hyperparameters of various models to improve performance.
-- **Automated Data Validation**: Introducing automated checks to validate new datasets against the model's expected input schema to catch errors early.
+- **Automated New Data Validation & Preprocessing**: Introducing automated checks to validate new datasets against the model's expected input schema.
 - **API Deployment**: Creating a RESTful API for the model, allowing for easy integration into web services and applications for real-time predictions. (this will be stage 4 out of a total of 4 for this project)
-
-
-
-### 😁 Wishful thinking features
-
-- **Model Persistence Upgrade**: Enhancing the model saving and loading mechanism to support more formats and ensure compatibility across different versions of libraries.
-- **Feature Engineering Toolkit**: Developing a set of tools for automated feature selection and engineering to uncover more predictive power from the dataset.
-- **Model Explainability**: Integrating model explainability tools and techniques to provide insights into model predictions, aiding in interpretability and trust.
-- **Continuous Training Pipeline**: Setting up a pipeline for continuous training, enabling the model to learn from new data as it becomes available.
-- **Performance Monitoring**: Implementing a system for monitoring model performance over time to detect and address model drift.
-- **Enhanced Model Evaluation**: Expanding the evaluation metrics and validation techniques to include more comprehensive assessments of model performance.
-- **Cross-Platform Compatibility**: Ensuring the project is compatible with different operating systems and environments to broaden its usability.
+- **...**
 
 
 ## 👩‍💻 Usage
