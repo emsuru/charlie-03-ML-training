@@ -1,41 +1,43 @@
-## --- !!! STILL VERY MUCH WORK IN PROGRESS !!! AAAAARGH ---
-
 import pandas as pd
 import joblib
-from preprocessing.newdata_preprocessor import NewDataPreprocessor
 
+def load_preprocessor(preprocessor_path):
+    """Load the saved preprocessor object."""
+    return joblib.load(preprocessor_path)
 
 def load_model(model_path):
+    """Load the saved model."""
     return joblib.load(model_path)
 
-def load_training_columns(filepath):
-    with open(filepath, 'r') as file:
-        columns = [line.strip() for line in file.readlines()]
-    return columns
-
-def preprocess_data(data_path):
+def preprocess_data(data_path, preprocessor):
+    """Preprocess the new data using the loaded preprocessor."""
     new_df = pd.read_csv(data_path)
-    # # Initialize the NewDataPreprocessor with the new dataset and training columns
-    # new_data_preprocessor = NewDataPreprocessor(new_df, training_columns)
-    # Prepare the new dataset for prediction
-    # X_new = new_data_preprocessor.prepare_for_prediction()
-    return X_new
+    # Apply preprocessing transformations
+    preprocessed_data = preprocessor.transform(new_df)
+    return preprocessed_data
 
 def predict(model, X):
+    """Make predictions using the preprocessed data and the loaded model."""
     return model.predict(X)
 
+def save_predictions(predictions, output_path='data/predictions.csv'):
+    """Save the predictions to a CSV file."""
+    pd.DataFrame(predictions, columns=['PredictedPrice']).to_csv(output_path, index=False)
+    print(f"Predictions saved to {output_path}")
+
 if __name__ == "__main__":
-    model_path = "saved_models/xgboost_model.pkl"  # change with any other model from saved_models/
-    new_data_path = "data/properties_2.csv"  # update this if different path
+    # Paths to the saved preprocessor and model
+    preprocessor_path = 'saved_preprocessors/data_preprocessor.pkl'
+    model_path = 'saved_models/your_model_name.pkl'
+    new_data_path = 'data/new_dataset.csv'  # Path to the new data
 
-    training_columns = load_training_columns('training/training_columns.txt')
-
+    # Load the preprocessor and model
+    preprocessor = load_preprocessor(preprocessor_path)
     model = load_model(model_path)
-    X_new = preprocess_data(new_data_path)
-    predictions = predict(model, X_new)
 
-    # Save or print predictions
-    # Ensure predictions is a DataFrame or convert it to one before saving
-    pd.DataFrame(predictions).to_csv('data/predictions.csv', index=False)
-    print("Predictions saved to predictions.csv")
-    #print(predictions)
+    # Preprocess the new data and make predictions
+    preprocessed_new_data = preprocess_data(new_data_path, preprocessor)
+    predictions = predict(model, preprocessed_new_data)
+
+    # Save predictions
+    save_predictions(predictions)

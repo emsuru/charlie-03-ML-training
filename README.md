@@ -49,6 +49,24 @@ charlie-03-ML/
 ```
 
 
+## Models
+
+Results on the test data set with PREPROCESSING PIPELINE 1:
+
+| Model           | MAE     | RMSE        | R2    |
+| :---            |         |             |       |
+| LinearRegressor | 175,366  | 381,902.54 | 0.21  |
+| XGBoost         | 135,565  | 319,912.55 | 0.44  |
+| Random Forest   | 138,383  | 313,042.30 | 0.47  |
+
+Results on the test data set with PREPROCESSING PIPELINE 2:
+
+| Model           | MAE         |   RMSE         | R2    |
+| :---            |             |                |       |
+| LinearRegressor | 159,733.50  | 341,468.96     | 0.32  |
+| XGBoost         | 101,317.91  | 222,860.80     | 0.71  |
+| Random Forest   |  90,923.73  | 210,820.60     | 0.74  |
+
 ## Project Status:
 
 Currently training and evaluating various ML models. Will update soon to leave only the best performing model and clean the repo, before moving on to the 4th and last phase of the project.
@@ -65,13 +83,13 @@ Currently training and evaluating various ML models. Will update soon to leave o
 - data preprocessing pipeline (`preprocessing/data_preprocessor.py`) that cleans, imputes, and encodes to rpepare for training
 - new data validation & preprocessing, to prepare new data sets for prediction (`preprocessing/newdata_preprocessor.py`)
 - separate `predict.py` script to load trained models, make predictions on new datasets and save predictions in output .csv file
-- modular design 
+- modular design
 
 ### 🚀 Upcoming Features
 
-- **hyperparameter tuning**: improving the performance of the baseline models 
+- **hyperparameter tuning**: improving the performance of the baseline models
 - **automated new data validation**: futher automating newdata validation checks against the model's expected input schema.
-- **API deployment**: this will the final development stage for this four-stage learning project 
+- **API deployment**: this will the final development stage for this four-stage learning project
 
 
 ## 👩‍💻 Usage
@@ -89,7 +107,7 @@ Example:
 
 ```
 
-python -m models/train_xgboost 
+python -m models/train_xgboost
 
 ```
 

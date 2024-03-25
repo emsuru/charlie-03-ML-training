@@ -16,7 +16,7 @@ def train_xgboost():
     trainer = ModelTrainer(X_train, X_test, y_train, y_test)
     trainer.train_model(xgb.XGBRegressor(objective ='reg:squarederror'))
     trainer.evaluate_model()
-    trainer.save_model("xgboost_model.pkl")
+    trainer.save_model("xgboost_model_2.pkl")
 
 if __name__ == "__main__":
     train_xgboost()
