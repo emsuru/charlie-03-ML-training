@@ -57,7 +57,7 @@ Here is an example of the evaluation results for the test set, with three differ
 ```
 
 | Model           | MAE         |   RMSE         | R2    |
-| :---            |             |                |       |
+|                 |             |                |       |
 | LinearRegressor | 159,733.50  | 341,468.96     | 0.32  |
 | XGBoost         | 101,317.91  | 222,860.80     | 0.71  |
 | Random Forest   |  90,923.73  | 210,820.60     | 0.74  |
@@ -127,8 +127,7 @@ All my code is currently *heavily*:
 
 - docstringed
 - commented
-
-.. and sometimes typed.
+- .. and sometimes typed
 
 This is to help me learn and for my feedback sessions with our coach.
 
