@@ -13,33 +13,34 @@ This Price Predictor is built to predict residential property prices. It is phas
 
 charlie-03-ML/
 │
-├── data/
-│   └── properties.csv                --- data: training dataset
-│   └── newdata.csv                   --- data: new dataset(s) for predictions
+├── input_data/
+│   └── properties.csv                --- data: training dataset (.csv)
+│   └── newdata.csv                   --- data: new dataset(s) for predictions (.csv)
 │
-├── preprocessing/                    --- definition code for data preprocessing classes
+├── preprocessing/                    --- definition code: data preprocessing Class to clean, impute & encode data
 │   └── __init__.py
 │   └── data_preprocessor.py
-│   └── newdata_preprocessor.py
+│   └── num_imputer.pkl
+│   └── *_.pkl (other objects)        --- preprocessing Objects saved in .pkl format to be used in predict.py
 │
-├── training/                         --- definition code for base training class
+├── training/                         --- definition code: the base training Class, that all models inherit from
 │   └── __init__.py
 │   └── model_trainer.py
-│   └── training_columns.txt
 │
-├── models/                           --- execution code: runs training code on several ML algorithms
+├── models/                           --- execution code: runs base training code with various ML algorithms
 │   └── __init__.py
-│   └── train_catboost.py
-│   └── train_gradient_boosting.py
-│   └── train_linear_regression.py
 │   └── train_random_forest.py
 │   └── train_xgboost.py
 │   └── train_*.py (other models)
 │
-├── saved_models/                     --- saved models in .pkl format (not pushed to repo yet)
+├── saved_models/                     --- trained models: saved in .pkl format to use for predictions (large files, not pushed to git yet)
 │   └── model_*.pkl
 │
-├── predict.py                        --- execution code: runs predictions on new dataset(s)
+├── predict.py                        --- execution code: runs predictions on new dataset(s) and saves output in .csv format
+│
+├── output_data/                      --- data: predictions (.csv)
+│   └── predictions.csv
+│
 ├── .gitignore
 ├── requirements.txt
 ├── MODELCARD.md
@@ -47,17 +48,13 @@ charlie-03-ML/
 ```
 
 
-## Models
+## Model training
 
-Results on the test data set with PREPROCESSING PIPELINE 1:
+I have iteratively tested 1. various preprocessing pipelines and 2. various algorithms to train and evaluate multiple ML models. I found that the RandomForest Regressor and XGBoost Regressor models performed the best.
 
-| Model           | MAE     | RMSE        | R2    |
-| :---            |         |             |       |
-| LinearRegressor | 175,366  | 381,902.54 | 0.21  |
-| XGBoost         | 135,565  | 319,912.55 | 0.44  |
-| Random Forest   | 138,383  | 313,042.30 | 0.47  |
+Here is an example of the evaluation results for the test set, with three different algorithms:
 
-Results on the test data set with PREPROCESSING PIPELINE 2:
+```
 
 | Model           | MAE         |   RMSE         | R2    |
 | :---            |             |                |       |
@@ -65,47 +62,40 @@ Results on the test data set with PREPROCESSING PIPELINE 2:
 | XGBoost         | 101,317.91  | 222,860.80     | 0.71  |
 | Random Forest   |  90,923.73  | 210,820.60     | 0.74  |
 
-## Project Status:
 
-Currently training and evaluating various ML models. Will update soon to leave only the best performing model and clean the repo, before moving on to the 4th and last phase of the project.
-
-- the saved_models folder with the pickle files is not pushed to this repo yet from local machine (need to handle large file uploads to git)
-- the MODELCARD is work-in-progress
-- predict.py is work-in-progress
-
-
+```
+No finetuning has been done, these are the scores at the first attempt.
 
 ## 🛠️ Features
 
-- supports training with various machine learning algorithmss, for easy experimentation & model comparison
-- data preprocessing pipeline (`preprocessing/data_preprocessor.py`) that cleans, imputes, and encodes to rpepare for training
-- new data validation & preprocessing, to prepare new data sets for prediction (`preprocessing/newdata_preprocessor.py`)
+- modular OOP-based projects structure, supports training with multiple machine learning algorithmss, for easy experimentation & model comparison
+- data preprocessing pipeline (`preprocessing/data_preprocessor.py`) that cleans, imputes, and encodes to prepare for training
 - separate `predict.py` script to load trained models, make predictions on new datasets and save predictions in output .csv file
-- modular design
+
 
 ### 🚀 Upcoming Features
 
+- **simplifying preprocessing**: further simplifying the preprocessing pipeline to make it more efficient, using scikit's Pipeline class
 - **hyperparameter tuning**: improving the performance of the baseline models
-- **automated new data validation**: futher automating newdata validation checks against the model's expected input schema.
-- **API deployment**: this will the final development stage for this four-stage learning project
 
 
 ## 👩‍💻 Usage
 
-To use this project for training a model or making predictions, follow these steps:
+To use this project for training a model and for making predictions, follow these steps:
 
 ### Training a Model
 
-1. Place your training dataset in the `data/` directory.
+1. Place your training dataset in the `input_data/` directory.
 2. Choose the model training script from the `models/` directory (e.g., `train_linear_regression.py`).
-3. Run the script to train the model. This will also save the trained model in the `saved_models/` directory.
+3. Run the script to train the model. This will print model evaluation scores to terminal & save the trained model in the `saved_models/` directory.
 
 Please note: do _**not**_ include ".py" in the file name when executing.
+
 Example:
 
 ```
 
-python -m models/train_xgboost
+python -m models/train_linear_regression
 
 ```
 
@@ -113,10 +103,9 @@ python -m models/train_xgboost
 ### Making Predictions
 
 1. Ensure you have a trained model saved in the `saved_models/` directory.
-2. Place the new dataset for prediction in the `data/` directory.
+2. Place the new dataset for prediction in the `input_data/` directory. This dataset should have the same schema as the training dataset.
 3. Update the `predict.py` script with the correct paths for the model and the new dataset.
-4. Run `predict.py` to preprocess the new dataset and make predictions. This will print predictions to the console or save to a file (--_to be updated once I finalise writing predict.py_--))
-
+4. Run `predict.py` to preprocess the new dataset and make predictions. Your predictions are saved to a .csv in the `output_data/` directory.
 
 ```
 

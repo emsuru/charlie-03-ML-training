@@ -4,10 +4,10 @@ from preprocessing.data_preprocessor import DataPreprocessor
 from training.model_trainer import ModelTrainer
 
 def train_gradient_boosting():
-    df = pd.read_csv('data/properties.csv')
+    df = pd.read_csv('input_data/properties.csv')
     preprocessor = DataPreprocessor(df)
-    preprocessor.clean_drop().clean_impute().clean_encode()
-    preprocessor.save_training_columns('training/training_columns.txt')
+    preprocessor.clean_drop().clean_impute().encode_state_building().encode_epc()
+    # preprocessor.save_training_columns('training/training_columns.txt')
     X_train, X_test, y_train, y_test = preprocessor.preprocess_split()
     X_train, X_test = preprocessor.preprocess_encode(X_train, X_test)
     X_train, X_test = preprocessor.preprocess_feat_select(X_train, X_test, y_train)

@@ -1,9 +1,17 @@
+#ignore preprocessor pickles
+preprocessing/state_mapping.pkl
+preprocessing/onehotencoder.pkl
+preprocessing/num_imputer.pkl
+preprocessing/epc_mapping.pkl
+preprocessing/columns_to_keep.pkl
+
 #ignore the CatBoost info folder
 catboost_info/
 # ignore the don't push folder
 dont_push/
+#ignore saved models pickles
+# saved_models/
 
-saved_models/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

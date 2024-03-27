@@ -4,7 +4,7 @@
 
 ## Model Details
 - **Model Type**: Linear Regression, with additional models including CatBoost, XGBoost, Random Forest, etc.
-- **Training Data**: `data/properties.csv`
+- **Training Data**: `input_data/properties.csv`
 - **Preprocessing**: Data cleaning, imputation, and encoding as per `preprocessing/data_preprocessor.py`.
 - **Evaluation Metrics**: Model performance evaluated using standard metrics (MAE, MSE, RMSE, R²).
 
@@ -22,4 +22,4 @@
 
 ## Caveats and Recommendations
 - **Model Limitations**: To be filled-in..
-- **Future Work**: Hyperparameter tuning and API deployment in a future stage of the project.
+- **Future Work**: Simplified preprocessing using scikit's Pipeline class, Hyperparameter tuning and API deployment in a future stage of the project.
