@@ -128,7 +128,7 @@ All my code is currently *heavily*:
 
 - docstringed
 - commented
-- .. and sometimes typed
+- and sometimes typed
 
 This is to help me learn and for my feedback sessions with our coach.
 
@@ -136,4 +136,4 @@ This is to help me learn and for my feedback sessions with our coach.
 
 Thank you for visiting my project page!
 
-Connect with me on [LinkedIn](https://www.linkedin.com/in/mirunasuru/)
+Connect with me on [LinkedIn](https://www.linkedin.com/in/mirunasuru/) ♡
