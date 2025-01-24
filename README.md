@@ -6,7 +6,7 @@
 
 This Price Predictor is built to predict residential property prices. It is phase 3 out of a larger project. See phase 1 (data collection) [here](https://github.com/emsuru/charlie-01-data-collection) and phase 2 (data analysis) [here](https://github.com/emsuru/charlie-02-data-analysis). The Predictor takes a dataset of properties and their features as input, runs it through a preprocessing pipeline, uses the preprocessed data to train a machine learning model and finally runs the model on new data to output predictions. 
 
-The model is currently live on the web [at this API endpoint](https://github.com/emsuru/charlie-04-ML-deployment).
+The model is currently live on the web [at this API endpoint](https://github.com/emsuru/charlie-04-ML-deployment) and [this Streamlit web app.](https://charlie-ml.streamlit.app/)
 
 ## 🧬 Project structure
 
